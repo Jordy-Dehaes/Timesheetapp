@@ -34,14 +34,17 @@
       <div id="timesheet"></div>
       <button onclick="exportCSV()">Export CSV</button>
     </section>
+    
+<!-- New: Rules Management -->
+<section id="rulesSection" style="display:none;">
+  <h2>Rules Management</h2>
+  <table id="rulesTable" border="1" cellpadding="5"></table>
+  <button onclick="addRule()">Add New Rule</button>
+  <button onclick="resetRules()">Reset Rules</button>
+  <button onclick="exportRules()">Export Rules</button>
+</section>
+</div>
 
-    <!-- New: Rules Management -->
-    <section id="rulesSection" style="display:none;">
-      <h2>Rules Management</h2>
-      <table id="rulesTable" border="1" cellpadding="5"></table>
-      <button onclick="addRule()">Add New Rule</button>
-    </section>
-  </div>
 
   <script src="app.js?v=2"></script>
 </body>

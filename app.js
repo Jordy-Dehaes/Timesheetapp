@@ -20,6 +20,7 @@ function handleParse() {
   parsedEvents = parseSummary(text);
   renderCategorization();
 }
+
 function parseSummary(text) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
@@ -89,6 +90,7 @@ function parseSummary(text) {
   // Convert various duration formats to hours (float)
   function parseDuration(str) {
     str = str.toLowerCase().trim();
+
 
   // 1. Simple numbers with h
   if (/^\d+(\.\d+)?h$/.test(str)) {
@@ -185,11 +187,29 @@ function generateTimesheet() {
   section.style.display = "block";
   const div = document.getElementById("timesheet");
 
-  // Build simple summary table
-  let html = "<table><tr><th>Task</th><th>Date</th><th>Duration</th></tr>";
+  // Group events by category and project
+  const groups = {};
   parsedEvents.forEach(evt => {
-    html += `<tr><td>${evt.task}</td><td>${evt.date}</td><td>${evt.duration}h</td></tr>`;
+    const cat = evt.category || "Uncategorized";
+    const proj = evt.project || "Unspecified";
+    if (!groups[cat]) groups[cat] = {};
+    groups[cat][proj] = (groups[cat][proj] || 0) + evt.duration;
   });
+
+  // Build grouped summary table with subtotals and overall total
+  let overall = 0;
+  let html = "<table><tr><th>Category</th><th>Project</th><th>Hours</th></tr>";
+  Object.keys(groups).forEach(cat => {
+    let catTotal = 0;
+    Object.keys(groups[cat]).forEach(proj => {
+      const hours = groups[cat][proj];
+      catTotal += hours;
+      overall += hours;
+      html += `<tr><td>${cat}</td><td>${proj}</td><td>${hours.toFixed(2)}h</td></tr>`;
+    });
+    html += `<tr><td colspan=\"2\"><strong>${cat} subtotal</strong></td><td><strong>${catTotal.toFixed(2)}h</strong></td></tr>`;
+  });
+  html += `<tr><td colspan=\"2\"><strong>Total</strong></td><td><strong>${overall.toFixed(2)}h</strong></td></tr>`;
   html += "</table>";
   div.innerHTML = html;
 }
@@ -239,8 +259,23 @@ function addRule() {
   renderRules();
 }
 
+
+function resetRules() {
+  localStorage.removeItem("rules");
+  rules = [];
+  renderRules();
+}
+
+function exportRules() {
+  const blob = new Blob([JSON.stringify(rules, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "rules.json";
+  a.click();
+
 // Export for Node-based testing
 if (typeof module !== 'undefined') {
   module.exports = { parseSummary };
+
 }
 
