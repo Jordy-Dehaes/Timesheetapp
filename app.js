@@ -194,3 +194,14 @@ function exportCSV() {
   a.download = "timesheet.csv";
   a.click();
 }
+
+function showSection(id) {
+  document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
+  if (id === "paste") document.getElementById("pasteSection").style.display = "block";
+  if (id === "timesheet") document.getElementById("timesheetSection").style.display = "block";
+  if (id === "rules") {
+    document.getElementById("rulesSection").style.display = "block";
+    renderRules();
+  }
+}
+
