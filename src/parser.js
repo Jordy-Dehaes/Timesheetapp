@@ -1,0 +1,116 @@
+import { findRule } from './rules.js';
+
+export function parseSummary(text) {
+  const lines = text.split("\n").map(l => l.trim()).filter(l => l);
+  const events = [];
+  let idCounter = 1;
+  let currentDay = null;
+
+  // Detect day-only line like "Mon"
+  const dayRegex = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/i;
+
+  // Detect meeting line: "09:15-09:45 Title (duration)"
+  // Supports separators "-", "–" or "to" and optional duration parentheses
+  const meetingRegex = /^(\d{1,2}:\d{2})\s*(?:-|–|to)\s*(\d{1,2}:\d{2})\s+(.+)$/i;
+
+  for (const line of lines) {
+    if (dayRegex.test(line)) {
+      currentDay = line.slice(0, 3); // Normalize to Mon/Tue/…
+      continue;
+    }
+
+    const match = line.match(meetingRegex);
+    if (match && currentDay) {
+      const [, start, end, rest] = match;
+
+      // Support duration with or without parentheses. If absent, duration=0
+      let title = rest;
+      let durationRaw = "0";
+      const paren = rest.match(/(.+?)\s*\((.+)\)$/);
+      if (paren) {
+        title = paren[1];
+        durationRaw = paren[2];
+      } else {
+        const parts = rest.split(/\s+/);
+        const potential = parts[parts.length - 1];
+        if (parseDuration(potential) > 0) {
+          durationRaw = potential;
+          parts.pop();
+          title = parts.join(" ");
+        }
+      }
+
+      const date = dayToDate(currentDay);
+      const duration = parseDuration(durationRaw);
+
+      events.push({
+        id: "evt-" + idCounter++,
+        title: title.trim(),
+        date,
+        start,
+        end,
+        duration,
+        category: findRule(title)?.category || "",
+        project: findRule(title)?.project || "",
+        task: findRule(title)?.task || "",
+        raw: line
+      });
+    }
+  }
+
+  // Debug: if nothing parsed, log lines for inspection
+  if (events.length === 0) {
+    console.warn("No events parsed. Check input format:", lines);
+  }
+
+  return events;
+}
+
+// Convert various duration formats to hours (float)
+function parseDuration(str) {
+  str = str.toLowerCase().trim();
+
+  // 1. Simple numbers with h
+  if (/^\d+(\.\d+)?h$/.test(str)) {
+    return parseFloat(str.replace("h", ""));
+  }
+
+  // 2. Hours + optional minutes
+  const hm = str.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min/);
+  if (hm) {
+    const hours = parseInt(hm[1], 10);
+    const mins = hm[2] ? parseInt(hm[2], 10) : 0;
+    return hours + mins / 60;
+  }
+
+  // 3. Hours only
+  const h = str.match(/(\d+)\s*hour[s]?/);
+  if (h) {
+    return parseInt(h[1], 10);
+  }
+
+  // 4. Minutes only
+  const m = str.match(/(\d+)\s*m(in(ute)?s?)?/);
+  if (m) {
+    return parseInt(m[1], 10) / 60;
+  }
+
+  // 5. Fallback: try to parse as number
+  const f = parseFloat(str);
+  if (!isNaN(f)) return f;
+
+  return 0; // default if unknown
+}
+
+function dayToDate(dayAbbrev) {
+  const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const today = new Date();
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  const idx = days.indexOf(dayAbbrev);
+  const date = new Date(monday);
+  date.setDate(monday.getDate() + idx);
+  return date.toISOString().slice(0, 10);
+}
+
+export default { parseSummary };
