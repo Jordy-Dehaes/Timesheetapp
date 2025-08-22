@@ -187,11 +187,29 @@ function generateTimesheet() {
   section.style.display = "block";
   const div = document.getElementById("timesheet");
 
-  // Build simple summary table
-  let html = "<table><tr><th>Task</th><th>Date</th><th>Duration</th></tr>";
+  // Group events by category and project
+  const groups = {};
   parsedEvents.forEach(evt => {
-    html += `<tr><td>${evt.task}</td><td>${evt.date}</td><td>${evt.duration}h</td></tr>`;
+    const cat = evt.category || "Uncategorized";
+    const proj = evt.project || "Unspecified";
+    if (!groups[cat]) groups[cat] = {};
+    groups[cat][proj] = (groups[cat][proj] || 0) + evt.duration;
   });
+
+  // Build grouped summary table with subtotals and overall total
+  let overall = 0;
+  let html = "<table><tr><th>Category</th><th>Project</th><th>Hours</th></tr>";
+  Object.keys(groups).forEach(cat => {
+    let catTotal = 0;
+    Object.keys(groups[cat]).forEach(proj => {
+      const hours = groups[cat][proj];
+      catTotal += hours;
+      overall += hours;
+      html += `<tr><td>${cat}</td><td>${proj}</td><td>${hours.toFixed(2)}h</td></tr>`;
+    });
+    html += `<tr><td colspan=\"2\"><strong>${cat} subtotal</strong></td><td><strong>${catTotal.toFixed(2)}h</strong></td></tr>`;
+  });
+  html += `<tr><td colspan=\"2\"><strong>Total</strong></td><td><strong>${overall.toFixed(2)}h</strong></td></tr>`;
   html += "</table>";
   div.innerHTML = html;
 }
