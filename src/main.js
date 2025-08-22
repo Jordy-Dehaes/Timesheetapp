@@ -1,9 +1,17 @@
-import { showSection, handleParse, renderCategorization, updateEvent, generateTimesheet, exportCSV } from './ui.js';
-import { addRule, updateRule, deleteRule } from './rules.js';
+import {
+  handleParse,
+  renderCategorization,
+  updateEvent,
+  generateTimesheet,
+  exportCSV,
+} from "./ui.js";
+import { addRule, updateRule, deleteRule } from "./rules.js";
+import { initNavigation } from "./navigation.js";
+
+initNavigation();
 
 // Expose functions for inline handlers
 Object.assign(window, {
-  showSection,
   handleParse,
   renderCategorization,
   updateEvent,
@@ -11,5 +19,5 @@ Object.assign(window, {
   exportCSV,
   addRule,
   updateRule,
-  deleteRule
+  deleteRule,
 });
