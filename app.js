@@ -67,26 +67,6 @@ function parseSummary(text) {
   return events;
 }
 
-// More flexible duration parser
-function parseDuration(str) {
-  str = str.toLowerCase().trim();
-
-  if (str.endsWith("h")) return parseFloat(str);
-  if (str.includes("hour")) {
-    const hm = str.match(/(\\d+)\\s*hour[s]?\\s*(\\d+)?/);
-    if (hm) return parseInt(hm[1],10) + (hm[2]?parseInt(hm[2],10)/60:0);
-  }
-  if (str.includes("min")) {
-    const m = str.match(/(\\d+)/);
-    if (m) return parseInt(m[1],10)/60;
-  }
-  if (str.endsWith("m")) return parseInt(str,10)/60;
-  const f = parseFloat(str);
-  return isNaN(f) ? 0 : f;
-}
-
-
-
 // Convert various duration formats to hours (float)
 function parseDuration(str) {
   str = str.toLowerCase().trim();
