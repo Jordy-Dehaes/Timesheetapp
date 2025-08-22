@@ -20,6 +20,7 @@ function handleParse() {
   parsedEvents = parseSummary(text);
   renderCategorization();
 }
+
 function parseSummary(text) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
@@ -89,6 +90,7 @@ function parseSummary(text) {
   // Convert various duration formats to hours (float)
   function parseDuration(str) {
     str = str.toLowerCase().trim();
+
 
   // 1. Simple numbers with h
   if (/^\d+(\.\d+)?h$/.test(str)) {
@@ -239,8 +241,23 @@ function addRule() {
   renderRules();
 }
 
+
+function resetRules() {
+  localStorage.removeItem("rules");
+  rules = [];
+  renderRules();
+}
+
+function exportRules() {
+  const blob = new Blob([JSON.stringify(rules, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "rules.json";
+  a.click();
+
 // Export for Node-based testing
 if (typeof module !== 'undefined') {
   module.exports = { parseSummary };
+
 }
 
