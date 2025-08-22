@@ -1,3 +1,4 @@
+
 import { initNavigation } from './navigation.js';
 import { initParser, parseSummary } from './parser.js';
 import { initTimesheet } from './timesheet.js';
@@ -12,3 +13,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export { parseSummary };
+
