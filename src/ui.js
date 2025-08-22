@@ -21,7 +21,7 @@ export function handleParse() {
 
 export function renderCategorization() {
   const section = document.getElementById("categorization");
-  section.style.display = "block";
+  section.classList.remove("hidden");
   const table = document.getElementById("eventsTable");
   table.innerHTML = "<tr><th>Date</th><th>Title</th><th>Duration</th><th>Category</th><th>Project</th><th>Task</th></tr>";
 
@@ -53,7 +53,7 @@ export function generateTimesheet() {
   localStorage.setItem("rules", JSON.stringify(rules));
 
   const section = document.getElementById("timesheetSection");
-  section.style.display = "block";
+  section.classList.remove("hidden");
   const div = document.getElementById("timesheet");
 
   // Build simple summary table
