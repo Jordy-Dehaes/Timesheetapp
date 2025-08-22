@@ -31,9 +31,9 @@ export function renderCategorization() {
       <td>${evt.date}</td>
       <td>${evt.title}</td>
       <td>${evt.duration}h</td>
-      <td><input value="${evt.category}" onchange="updateEvent(${idx}, 'category', this.value)"></td>
-      <td><input value="${evt.project}" onchange="updateEvent(${idx}, 'project', this.value)"></td>
-      <td><input value="${evt.task}" onchange="updateEvent(${idx}, 'task', this.value)"></td>
+      <td><input class="text-black" value="${evt.category}" onchange="updateEvent(${idx}, 'category', this.value)"></td>
+      <td><input class="text-black" value="${evt.project}" onchange="updateEvent(${idx}, 'project', this.value)"></td>
+      <td><input class="text-black" value="${evt.task}" onchange="updateEvent(${idx}, 'task', this.value)"></td>
     `;
     table.appendChild(row);
   });

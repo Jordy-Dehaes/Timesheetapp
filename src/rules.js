@@ -20,10 +20,10 @@ export function renderRules() {
   rules.forEach((r, idx) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><input value="${r.pattern}" onchange="updateRule(${idx}, 'pattern', this.value)"></td>
-      <td><input value="${r.category}" onchange="updateRule(${idx}, 'category', this.value)"></td>
-      <td><input value="${r.project}" onchange="updateRule(${idx}, 'project', this.value)"></td>
-      <td><input value="${r.task}" onchange="updateRule(${idx}, 'task', this.value)"></td>
+      <td><input class="text-black" value="${r.pattern}" onchange="updateRule(${idx}, 'pattern', this.value)"></td>
+      <td><input class="text-black" value="${r.category}" onchange="updateRule(${idx}, 'category', this.value)"></td>
+      <td><input class="text-black" value="${r.project}" onchange="updateRule(${idx}, 'project', this.value)"></td>
+      <td><input class="text-black" value="${r.task}" onchange="updateRule(${idx}, 'task', this.value)"></td>
       <td><button onclick="deleteRule(${idx})">Delete</button></td>
     `;
     table.appendChild(row);
