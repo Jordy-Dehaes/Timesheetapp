@@ -1,13 +1,14 @@
 import test from 'node:test';
-import assert from 'node:assert/strict';
+import assert from 'node:assert';
 
-// Polyfill minimal localStorage before importing parser
+// Polyfill minimal localStorage before importing modules
 global.localStorage = {
   getItem: () => null,
   setItem: () => {}
 };
 
-const { parseSummary } = await import('../parser.js');
+const { parseSummary } = await import('../src/parser.js');
+
 
 const sampleDay = 'Mon';
 
