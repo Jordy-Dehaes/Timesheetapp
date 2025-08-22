@@ -2,47 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Timesheet Parser MVP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+  <div class="container">
+    <h1>Timesheet Parser</h1>
+    <nav class="nav" aria-label="Primary navigation">
+      <button class="nav__button active" onclick="showSection('paste', this)" aria-controls="pasteSection" aria-current="page">Paste</button>
+      <button class="nav__button" onclick="showSection('timesheet', this)" aria-controls="timesheetSection">Timesheet</button>
+      <button class="nav__button" onclick="showSection('rules', this)" aria-controls="rulesSection">Rules</button>
+    </nav>
 
-  <h1>Timesheet Parser</h1>
-  <nav class="nav" aria-label="Primary navigation">
-    <button class="nav__button active" onclick="showSection('paste', this)" aria-controls="pasteSection" aria-current="page">Paste</button>
-    <button class="nav__button" onclick="showSection('timesheet', this)" aria-controls="timesheetSection">Timesheet</button>
-    <button class="nav__button" onclick="showSection('rules', this)" aria-controls="rulesSection">Rules</button>
-  </nav>
+    <!-- Step 1: Paste Copilot summary -->
+    <section id="pasteSection">
+      <h2>Paste Outlook Summary</h2>
+      <textarea id="summary" rows="10" cols="80" placeholder="Paste your Copilot output here..."></textarea><br>
+      <button id="parseBtn">Parse Meetings</button>
+    </section>
 
-  <!-- Step 1: Paste Copilot summary -->
-  <section id="pasteSection">
-    <h2>Paste Outlook Summary</h2>
-    <textarea id="summary" rows="10" cols="80" placeholder="Paste your Copilot output here..."></textarea><br>
-    <button id="parseBtn">Parse Meetings</button>
-  </section>
+    <!-- Step 2: Categorization -->
+    <section id="categorization" style="display:none;">
+      <h2>Categorize Meetings</h2>
 
-  <!-- Step 2: Categorization -->
-  <section id="categorization" style="display:none;">
-    <h2>Categorize Meetings</h2>
+      <table id="eventsTable" class="table table-bordered"></table>
+      <button onclick="generateTimesheet()">Confirm & Generate Timesheet</button>
 
-    <table id="eventsTable" class="table table-bordered"></table>
-    <button onclick="generateTimesheet()">Confirm & Generate Timesheet</button>
+    </section>
 
-  </section>
+    <!-- Step 3: Timesheet -->
+    <section id="timesheetSection" style="display:none;">
+      <h2>Weekly Timesheet</h2>
+      <div id="timesheet"></div>
+      <button id="exportBtn">Export CSV</button>
+    </section>
 
-  <!-- Step 3: Timesheet -->
-  <section id="timesheetSection" style="display:none;">
-    <h2>Weekly Timesheet</h2>
-    <div id="timesheet"></div>
-    <button id="exportBtn">Export CSV</button>
-  </section>
-
-  <!-- New: Rules Management -->
-  <section id="rulesSection" style="display:none;">
-    <h2>Rules Management</h2>
-    <table id="rulesTable" class="table table-bordered"></table>
-    <button onclick="addRule()">Add New Rule</button>
-  </section>
+    <!-- New: Rules Management -->
+    <section id="rulesSection" style="display:none;">
+      <h2>Rules Management</h2>
+      <table id="rulesTable" class="table table-bordered"></table>
+      <button onclick="addRule()">Add New Rule</button>
+    </section>
+  </div>
 
   <script type="module" src="./src/main.js"></script>
 </body>
