@@ -240,3 +240,17 @@ function addRule() {
   renderRules();
 }
 
+function resetRules() {
+  localStorage.removeItem("rules");
+  rules = [];
+  renderRules();
+}
+
+function exportRules() {
+  const blob = new Blob([JSON.stringify(rules, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "rules.json";
+  a.click();
+}
+
