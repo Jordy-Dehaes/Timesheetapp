@@ -3,6 +3,17 @@ console.log("app.js loaded");
 let parsedEvents = [];
 let rules = JSON.parse(localStorage.getItem("rules") || "[]");
 
+function showSection(id) {
+  document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
+  if (id === "paste") document.getElementById("pasteSection").style.display = "block";
+  if (id === "timesheet") document.getElementById("timesheetSection").style.display = "block";
+  if (id === "rules") {
+    document.getElementById("rulesSection").style.display = "block";
+    renderRules();
+  }
+}
+
+
 function handleParse() {
   console.log("Parse button clicked");
   const text = document.getElementById("summary").value;
@@ -193,16 +204,6 @@ function exportCSV() {
   a.href = URL.createObjectURL(blob);
   a.download = "timesheet.csv";
   a.click();
-}
-
-function showSection(id) {
-  document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
-  if (id === "paste") document.getElementById("pasteSection").style.display = "block";
-  if (id === "timesheet") document.getElementById("timesheetSection").style.display = "block";
-  if (id === "rules") {
-    document.getElementById("rulesSection").style.display = "block";
-    renderRules();
-  }
 }
 
 function renderRules() {
