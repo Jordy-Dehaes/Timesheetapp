@@ -9,6 +9,7 @@ global.localStorage = {
 
 const { parseSummary } = await import('../src/parser.js');
 
+
 const sampleDay = 'Mon';
 
 function wrap(text) {
