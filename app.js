@@ -11,18 +11,24 @@ function parseSummary(text) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
   let idCounter = 1;
+  let currentDay = null;
 
-  // Regex captures:
-  // Day (Mon), start, end, title, duration text
-  const regex = /^(\w{3})\s+(\d{2}:\d{2})-(\d{2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
+  // Matches a day-only line like "Mon"
+  const dayRegex = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/;
+
+  // Matches a meeting line like "09:15-09:45 Premium Standup (0.5h)"
+  const meetingRegex = /^(\d{2}:\d{2})-(\d{2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
 
   for (const line of lines) {
-    const match = line.match(regex);
-    if (match) {
-      const [, day, start, end, title, durationRaw] = match;
-      const date = dayToDate(day);
+    if (dayRegex.test(line)) {
+      currentDay = line;
+      continue;
+    }
 
-      // Normalize duration
+    const match = line.match(meetingRegex);
+    if (match && currentDay) {
+      const [, start, end, title, durationRaw] = match;
+      const date = dayToDate(currentDay);
       const duration = parseDuration(durationRaw);
 
       events.push({
@@ -41,6 +47,7 @@ function parseSummary(text) {
   }
   return events;
 }
+
 
 // Convert various duration formats to hours (float)
 function parseDuration(str) {
