@@ -7,10 +7,10 @@
 <body>
 
   <h1>Timesheet Parser</h1>
-  <nav>
-    <button id="navPaste">Paste</button>
-    <button id="navTimesheet">Timesheet</button>
-    <button id="navRules">Rules</button>
+  <nav class="nav" aria-label="Primary navigation">
+    <button class="nav__button active" onclick="showSection('paste', this)" aria-controls="pasteSection" aria-current="page">Paste</button>
+    <button class="nav__button" onclick="showSection('timesheet', this)" aria-controls="timesheetSection">Timesheet</button>
+    <button class="nav__button" onclick="showSection('rules', this)" aria-controls="rulesSection">Rules</button>
   </nav>
 
   <!-- Step 1: Paste Copilot summary -->
