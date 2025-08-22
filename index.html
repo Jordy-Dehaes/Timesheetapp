@@ -4,65 +4,114 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Timesheet Parser</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
+  <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
     <div class="container">
       <header class="header">
         <div class="title">Timesheet Parser</div>
-        <nav class="tabs" role="tablist" aria-label="Sections">
-          <button class="tab" id="tab-paste" role="tab" aria-selected="true">
+        <nav
+          class="flex gap-2 rounded-full bg-slate-200 p-1 dark:bg-slate-800"
+          role="tablist"
+          aria-label="Sections"
+        >
+          <button
+            id="tab-paste"
+            class="rounded-full px-4 py-2 text-slate-600 aria-selected:bg-white aria-selected:text-slate-900 dark:text-slate-400 dark:aria-selected:bg-slate-900 dark:aria-selected:text-slate-100"
+            role="tab"
+            aria-selected="true"
+          >
             Paste
           </button>
           <button
-            class="tab"
             id="tab-timesheet"
+            class="rounded-full px-4 py-2 text-slate-600 aria-selected:bg-white aria-selected:text-slate-900 dark:text-slate-400 dark:aria-selected:bg-slate-900 dark:aria-selected:text-slate-100"
             role="tab"
             aria-selected="false"
           >
             Timesheet
           </button>
-          <button class="tab" id="tab-rules" role="tab" aria-selected="false">
+          <button
+            id="tab-rules"
+            class="rounded-full px-4 py-2 text-slate-600 aria-selected:bg-white aria-selected:text-slate-900 dark:text-slate-400 dark:aria-selected:bg-slate-900 dark:aria-selected:text-slate-100"
+            role="tab"
+            aria-selected="false"
+          >
             Rules
           </button>
         </nav>
       </header>
 
       <!-- Paste -->
-      <section id="pasteSection" class="card">
-        <h2>Paste Outlook Summary</h2>
-        <textarea
-          id="summary"
-          placeholder="Paste your Copilot output here..."
-        ></textarea>
-        <div class="actions">
-          <button class="btn btn-primary" id="parseBtn">Parse meetings</button>
-        </div>
-        <p class="help">Tip: Accepts lines like “09:15–09:45 Title (45m)”.</p>
-      </section>
+        <section
+          id="pasteSection"
+          class="rounded-xl border border-slate-200 bg-white p-6 shadow dark:border-slate-800 dark:bg-slate-900"
+        >
+          <h2>Paste Outlook Summary</h2>
+          <textarea
+            id="summary"
+            placeholder="Paste your Copilot output here..."
+          ></textarea>
+          <div class="actions">
+            <button
+              id="parseBtn"
+              class="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-slate-50 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+            >
+              Parse meetings
+            </button>
+          </div>
+          <p class="help">Tip: Accepts lines like “09:15–09:45 Title (45m)”.</p>
+        </section>
 
       <!-- Timesheet -->
-      <section id="timesheetSection" class="card hidden">
-        <h2>Timesheet</h2>
-        <div class="actions">
-          <button class="btn" id="exportCsvBtn">Export CSV</button>
-        </div>
-        <div id="timesheet" class="table-wrap"></div>
-      </section>
+        <section
+          id="timesheetSection"
+          class="hidden rounded-xl border border-slate-200 bg-white p-6 shadow dark:border-slate-800 dark:bg-slate-900"
+        >
+          <h2>Timesheet</h2>
+          <div class="actions">
+            <button
+              id="exportCsvBtn"
+              class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              Export CSV
+            </button>
+          </div>
+          <div id="timesheet" class="table-wrap"></div>
+        </section>
 
       <!-- Rules -->
-      <section id="rulesSection" class="card hidden">
-        <h2>Rules Management</h2>
-        <div class="actions">
-          <button class="btn btn-primary" id="addRuleBtn">Add rule</button>
-          <button class="btn" id="resetRulesBtn">Reset rules</button>
-          <button class="btn" id="exportRulesBtn">Export rules</button>
-        </div>
-        <div class="table-wrap">
-          <table id="rulesTable"></table>
-        </div>
-      </section>
+        <section
+          id="rulesSection"
+          class="hidden rounded-xl border border-slate-200 bg-white p-6 shadow dark:border-slate-800 dark:bg-slate-900"
+        >
+          <h2>Rules Management</h2>
+          <div class="actions">
+            <button
+              id="addRuleBtn"
+              class="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-slate-50 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+            >
+              Add rule
+            </button>
+            <button
+              id="resetRulesBtn"
+              class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              Reset rules
+            </button>
+            <button
+              id="exportRulesBtn"
+              class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            >
+              Export rules
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table id="rulesTable"></table>
+          </div>
+        </section>
     </div>
     <script type="module" src="./src/main.js"></script>
     <link rel="stylesheet" href="styles.css" />
-  </body>
-</html>
+    </body>
+  </html>
