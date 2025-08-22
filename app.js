@@ -4,6 +4,7 @@ let parsedEvents = [];
 let rules = JSON.parse(localStorage.getItem("rules") || "[]");
 
 function handleParse() {
+  console.log("Parse button clicked");
   const text = document.getElementById("summary").value;
   parsedEvents = parseSummary(text);
   renderCategorization();
