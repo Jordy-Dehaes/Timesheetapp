@@ -14,6 +14,7 @@ initNavigation();
 document.getElementById("parseBtn").addEventListener("click", handleParse);
 document.getElementById("generateBtn").addEventListener("click", generateTimesheet);
 document.getElementById("exportCsvBtn").addEventListener("click", exportCSV);
+document.getElementById("addRuleBtn").addEventListener("click", addRule);
 
 // Expose functions for inline handlers
 Object.assign(window, {
