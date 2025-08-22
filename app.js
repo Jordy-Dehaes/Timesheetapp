@@ -1,3 +1,5 @@
+console.log("app.js loaded");
+
 let parsedEvents = [];
 let rules = JSON.parse(localStorage.getItem("rules") || "[]");
 
