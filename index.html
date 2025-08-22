@@ -8,40 +8,40 @@
 <body>
   <h1>Timesheet Parser</h1>
   <nav>
-    <button onclick="showSection('paste')">Paste</button>
-    <button onclick="showSection('timesheet')">Timesheet</button>
-    <button onclick="showSection('rules')">Rules</button>
+    <button id="navPaste">Paste</button>
+    <button id="navTimesheet">Timesheet</button>
+    <button id="navRules">Rules</button>
   </nav>
 
   <!-- Step 1: Paste Copilot summary -->
   <section id="pasteSection">
     <h2>Paste Outlook Summary</h2>
     <textarea id="summary" rows="10" cols="80" placeholder="Paste your Copilot output here..."></textarea><br>
-    <button onclick="handleParse()">Parse Meetings</button>
+    <button id="parseBtn">Parse Meetings</button>
   </section>
 
   <!-- Step 2: Categorization -->
   <section id="categorization" style="display:none;">
     <h2>Categorize Meetings</h2>
     <table id="eventsTable" border="1" cellpadding="5"></table>
-    <button onclick="generateTimesheet()">Confirm & Generate Timesheet</button>
+    <button id="generateBtn">Confirm & Generate Timesheet</button>
   </section>
 
   <!-- Step 3: Timesheet -->
   <section id="timesheetSection" style="display:none;">
     <h2>Weekly Timesheet</h2>
     <div id="timesheet"></div>
-    <button onclick="exportCSV()">Export CSV</button>
+    <button id="exportBtn">Export CSV</button>
   </section>
 
   <!-- New: Rules Management -->
   <section id="rulesSection" style="display:none;">
     <h2>Rules Management</h2>
     <table id="rulesTable" border="1" cellpadding="5"></table>
-    <button onclick="addRule()">Add New Rule</button>
+    <button id="addRuleBtn">Add New Rule</button>
   </section>
 
-  <script src="app.js?v=2"></script>
+  <script type="module" src="app.js"></script>
 </body>
 
 </html>
