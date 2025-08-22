@@ -1,0 +1,7 @@
+{
+  "name": "timesheetapp",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
