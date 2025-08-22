@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Timesheet Parser MVP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Timesheet Parser</h1>
+
+  <!-- Step 1: Paste Copilot summary -->
+  <section>
+    <h2>Paste Outlook Summary</h2>
+    <textarea id="summary" rows="10" cols="80" placeholder="Paste your Copilot output here..."></textarea><br>
+    <button onclick="handleParse()">Parse Meetings</button>
+  </section>
+
+  <!-- Step 2: Categorization -->
+  <section id="categorization" style="display:none;">
+    <h2>Categorize Meetings</h2>
+    <table id="eventsTable" border="1" cellpadding="5"></table>
+    <button onclick="generateTimesheet()">Confirm & Generate Timesheet</button>
+  </section>
+
+  <!-- Step 3: Timesheet -->
+  <section id="timesheetSection" style="display:none;">
+    <h2>Weekly Timesheet</h2>
+    <div id="timesheet"></div>
+    <button onclick="exportCSV()">Export CSV</button>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
