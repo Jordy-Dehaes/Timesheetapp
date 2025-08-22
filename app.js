@@ -30,17 +30,36 @@ function parseSummary(text) {
   const dayRegex = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/i;
 
   // Detect meeting line: "09:15-09:45 Title (duration)"
-  const meetingRegex = /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
+  // Supports separators "-", "–" or "to" and optional duration parentheses
+  const meetingRegex = /^(\d{1,2}:\d{2})\s*(?:-|–|to)\s*(\d{1,2}:\d{2})\s+(.+)$/i;
 
   for (const line of lines) {
     if (dayRegex.test(line)) {
-      currentDay = line.slice(0,3); // Normalize to Mon/Tue/…
+      currentDay = line.slice(0, 3); // Normalize to Mon/Tue/…
       continue;
     }
 
     const match = line.match(meetingRegex);
     if (match && currentDay) {
-      const [, start, end, title, durationRaw] = match;
+      const [, start, end, rest] = match;
+
+      // Support duration with or without parentheses. If absent, duration=0
+      let title = rest;
+      let durationRaw = "0";
+      const paren = rest.match(/(.+?)\s*\((.+)\)$/);
+      if (paren) {
+        title = paren[1];
+        durationRaw = paren[2];
+      } else {
+        const parts = rest.split(/\s+/);
+        const potential = parts[parts.length - 1];
+        if (parseDuration(potential) > 0) {
+          durationRaw = potential;
+          parts.pop();
+          title = parts.join(" ");
+        }
+      }
+
       const date = dayToDate(currentDay);
       const duration = parseDuration(durationRaw);
 
@@ -238,5 +257,10 @@ function addRule() {
   rules.push({ pattern: "", category: "", project: "", task: "" });
   localStorage.setItem("rules", JSON.stringify(rules));
   renderRules();
+}
+
+// Export for Node-based testing
+if (typeof module !== 'undefined') {
+  module.exports = { parseSummary };
 }
 
