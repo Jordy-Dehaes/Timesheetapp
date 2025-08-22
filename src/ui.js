@@ -1,12 +1,9 @@
-import './style.css';
-import { parseSummary, findRule } from './parser.js';
+import { parseSummary } from './parser.js';
+import { rules, findRule, renderRules } from './rules.js';
 
-console.log("app.js loaded");
+export let parsedEvents = [];
 
-let parsedEvents = [];
-let rules = JSON.parse(localStorage.getItem("rules") || "[]");
-
-function showSection(id) {
+export function showSection(id) {
   document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
   if (id === "paste") document.getElementById("pasteSection").style.display = "block";
   if (id === "timesheet") document.getElementById("timesheetSection").style.display = "block";
@@ -15,15 +12,14 @@ function showSection(id) {
     renderRules();
   }
 }
-function handleParse() {
-  console.log("Parse button clicked");
-  const text = document.getElementById("summary").value;
-  parsedEvents = parseSummary(text, rules);
-  renderCategorization();
 
+export function handleParse() {
+  const text = document.getElementById("summary").value;
+  parsedEvents = parseSummary(text);
+  renderCategorization();
 }
 
-function renderCategorization() {
+export function renderCategorization() {
   const section = document.getElementById("categorization");
   section.style.display = "block";
   const table = document.getElementById("eventsTable");
@@ -43,15 +39,15 @@ function renderCategorization() {
   });
 }
 
-function updateEvent(i, field, value) {
+export function updateEvent(i, field, value) {
   parsedEvents[i][field] = value;
 }
 
-function generateTimesheet() {
+export function generateTimesheet() {
+  // Save new rules for unmapped titles
   parsedEvents.forEach(evt => {
-    if (!findRule(evt.title, rules)) {
+    if (!findRule(evt.title)) {
       rules.push({ pattern: evt.title, category: evt.category, project: evt.project, task: evt.task });
-
     }
   });
   localStorage.setItem("rules", JSON.stringify(rules));
@@ -59,6 +55,8 @@ function generateTimesheet() {
   const section = document.getElementById("timesheetSection");
   section.style.display = "block";
   const div = document.getElementById("timesheet");
+
+  // Build simple summary table
   let html = "<table><tr><th>Task</th><th>Date</th><th>Duration</th></tr>";
   parsedEvents.forEach(evt => {
     html += `<tr><td>${evt.task}</td><td>${evt.date}</td><td>${evt.duration}h</td></tr>`;
@@ -67,7 +65,7 @@ function generateTimesheet() {
   div.innerHTML = html;
 }
 
-function exportCSV() {
+export function exportCSV() {
   const header = ["Date","Title","Duration","Category","Project","Task"];
   const rows = parsedEvents.map(e => [e.date, e.title, e.duration, e.category, e.project, e.task]);
   const csv = [header, ...rows].map(r => r.join(",")).join("\n");
@@ -78,49 +76,4 @@ function exportCSV() {
   a.click();
 }
 
-function renderRules() {
-  const table = document.getElementById("rulesTable");
-  table.innerHTML = "<tr><th>Pattern</th><th>Category</th><th>Project</th><th>Task</th><th>Actions</th></tr>";
-
-  rules.forEach((r, idx) => {
-    const row = document.createElement("tr");
-@@ -217,30 +90,39 @@ function renderRules() {
-      <td><input value="${r.project}" onchange="updateRule(${idx}, 'project', this.value)"></td>
-      <td><input value="${r.task}" onchange="updateRule(${idx}, 'task', this.value)"></td>
-      <td><button onclick="deleteRule(${idx})">Delete</button></td>
-    `;
-    table.appendChild(row);
-  });
-}
-
-function updateRule(i, field, value) {
-  rules[i][field] = value;
-  localStorage.setItem("rules", JSON.stringify(rules));
-}
-
-function deleteRule(i) {
-  rules.splice(i, 1);
-  localStorage.setItem("rules", JSON.stringify(rules));
-  renderRules();
-}
-
-function addRule() {
-  rules.push({ pattern: "", category: "", project: "", task: "" });
-  localStorage.setItem("rules", JSON.stringify(rules));
-  renderRules();
-}
-
-if (typeof window !== "undefined") {
-  Object.assign(window, {
-    showSection,
-    handleParse,
-    renderCategorization,
-    updateEvent,
-    generateTimesheet,
-    exportCSV,
-    renderRules,
-    updateRule,
-    deleteRule,
-    addRule
-  });
-}
+export default { showSection, handleParse, renderCategorization, updateEvent, generateTimesheet, exportCSV };
