@@ -18,7 +18,9 @@ function showSection(id) {
 function handleParse() {
   console.log("Parse button clicked");
   const text = document.getElementById("summary").value;
-    renderCategorization();
+  parsedEvents = parseSummary(text, rules);
+  renderCategorization();
+
 }
 
 function renderCategorization() {
@@ -46,8 +48,10 @@ function updateEvent(i, field, value) {
 }
 
 function generateTimesheet() {
-    parsedEvents.forEach(evt => {
-            rules.push({ pattern: evt.title, category: evt.category, project: evt.project, task: evt.task });
+  parsedEvents.forEach(evt => {
+    if (!findRule(evt.title, rules)) {
+      rules.push({ pattern: evt.title, category: evt.category, project: evt.project, task: evt.task });
+
     }
   });
   localStorage.setItem("rules", JSON.stringify(rules));
@@ -55,7 +59,7 @@ function generateTimesheet() {
   const section = document.getElementById("timesheetSection");
   section.style.display = "block";
   const div = document.getElementById("timesheet");
-    let html = "<table><tr><th>Task</th><th>Date</th><th>Duration</th></tr>";
+  let html = "<table><tr><th>Task</th><th>Date</th><th>Duration</th></tr>";
   parsedEvents.forEach(evt => {
     html += `<tr><td>${evt.task}</td><td>${evt.date}</td><td>${evt.duration}h</td></tr>`;
   });
@@ -105,6 +109,7 @@ function addRule() {
   localStorage.setItem("rules", JSON.stringify(rules));
   renderRules();
 }
+
 if (typeof window !== "undefined") {
   Object.assign(window, {
     showSection,
