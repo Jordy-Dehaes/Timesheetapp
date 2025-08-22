@@ -15,7 +15,7 @@ export function showSection(id) {
 
 export function handleParse() {
   const text = document.getElementById("summary").value;
-  parsedEvents = parseSummary(text);
+  parsedEvents = parseSummary(text, rules);
   renderCategorization();
 }
 

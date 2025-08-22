@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert';
-import { parseSummary } from '../parser.js';
+import { parseSummary } from '../src/parser.js';
 
 const sampleDay = 'Mon';
 
