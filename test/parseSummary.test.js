@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert';
+import { parseSummary } from '../parser.js';
 
 // Polyfill minimal localStorage before importing modules
 global.localStorage = {
