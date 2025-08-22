@@ -3,13 +3,22 @@ console.log("app.js loaded");
 let parsedEvents = [];
 let rules = JSON.parse(localStorage.getItem("rules") || "[]");
 
-function showSection(id) {
+function showSection(id, btn) {
   document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
   if (id === "paste") document.getElementById("pasteSection").style.display = "block";
   if (id === "timesheet") document.getElementById("timesheetSection").style.display = "block";
   if (id === "rules") {
     document.getElementById("rulesSection").style.display = "block";
     renderRules();
+  }
+
+  document.querySelectorAll(".nav__button").forEach(button => {
+    button.classList.remove("active");
+    button.removeAttribute("aria-current");
+  });
+  if (btn) {
+    btn.classList.add("active");
+    btn.setAttribute("aria-current", "page");
   }
 }
 

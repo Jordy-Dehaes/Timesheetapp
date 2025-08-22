@@ -4,3 +4,30 @@ textarea { width: 100%; font-family: monospace; }
 table { border-collapse: collapse; width: 100%; margin-top: 10px; }
 th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
 select { width: 100px; }
+
+/* Reusable navigation styles */
+.nav {
+  display: flex;
+  background-color: #333;
+}
+
+.nav__button {
+  flex: 1;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.nav__button:hover,
+.nav__button:focus {
+  background-color: #444;
+  outline: none;
+}
+
+.nav__button.active,
+.nav__button[aria-current="page"] {
+  background-color: #555;
+}
