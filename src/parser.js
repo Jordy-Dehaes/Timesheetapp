@@ -1,6 +1,5 @@
-import { findRule } from './rules.js';
-
-export function parseSummary(text) {
+// Utility functions for parsing timesheet summaries
+export function parseSummary(text, rules = []) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
   let idCounter = 1;
@@ -42,6 +41,7 @@ export function parseSummary(text) {
 
       const date = dayToDate(currentDay);
       const duration = parseDuration(durationRaw);
+      const matchedRule = findRule(title, rules) || {};
 
       events.push({
         id: "evt-" + idCounter++,
@@ -50,15 +50,14 @@ export function parseSummary(text) {
         start,
         end,
         duration,
-        category: findRule(title)?.category || "",
-        project: findRule(title)?.project || "",
-        task: findRule(title)?.task || "",
+        category: matchedRule.category || "",
+        project: matchedRule.project || "",
+        task: matchedRule.task || "",
         raw: line
       });
     }
   }
 
-  // Debug: if nothing parsed, log lines for inspection
   if (events.length === 0) {
     console.warn("No events parsed. Check input format:", lines);
   }
@@ -66,7 +65,18 @@ export function parseSummary(text) {
   return events;
 }
 
-// Convert various duration formats to hours (float)
+export function findRule(title, rules = []) {
+  for (const r of rules) {
+    try {
+      const re = new RegExp(r.pattern, "i");
+      if (re.test(title)) return r;
+    } catch (e) {
+      if (r.pattern === title) return r;
+    }
+  }
+  return null;
+}
+
 function parseDuration(str) {
   str = str.toLowerCase().trim();
 
@@ -113,4 +123,3 @@ function dayToDate(dayAbbrev) {
   return date.toISOString().slice(0, 10);
 }
 
-export default { parseSummary };
