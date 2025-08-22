@@ -18,6 +18,7 @@ export function initNavigation() {
 
     if (active !== "#pasteSection") {
       categorization.classList.add("hidden");
+      eventsTable.innerHTML = "";
     } else if (eventsTable.rows.length > 0) {
       categorization.classList.remove("hidden");
     }
