@@ -125,8 +125,18 @@ function dayToDate(dayAbbrev) {
 }
 
 function findRule(title) {
-  return rules.find(r => r.pattern === title);
+  for (const r of rules) {
+    try {
+      const re = new RegExp(r.pattern, "i");
+      if (re.test(title)) return r;
+    } catch (e) {
+      // fallback if invalid regex
+      if (r.pattern === title) return r;
+    }
+  }
+  return null;
 }
+
 
 function renderCategorization() {
   const section = document.getElementById("categorization");
