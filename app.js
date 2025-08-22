@@ -20,6 +20,41 @@ function handleParse() {
   parsedEvents = parseSummary(text);
   renderCategorization();
 }
+function parseDuration(str) {
+  str = str.toLowerCase().trim();
+
+  // 1. Simple numbers with h
+  if (/^\d+(\.\d+)?h$/.test(str)) {
+    return parseFloat(str.replace("h", ""));
+  }
+
+  // 2. Hours + optional minutes
+  const hm = str.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min/);
+  if (hm) {
+    const hours = parseInt(hm[1], 10);
+    const mins = hm[2] ? parseInt(hm[2], 10) : 0;
+    return hours + mins / 60;
+  }
+
+  // 3. Hours only
+  const h = str.match(/(\d+)\s*hour[s]?/);
+  if (h) {
+    return parseInt(h[1], 10);
+  }
+
+  // 4. Minutes only
+  const m = str.match(/(\d+)\s*m(in(ute)?s?)?/);
+  if (m) {
+    return parseInt(m[1], 10) / 60;
+  }
+
+  // 5. Fallback: try to parse as number
+  const f = parseFloat(str);
+  if (!isNaN(f)) return f;
+
+  return 0; // default if unknown
+}
+
 function parseSummary(text) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
@@ -31,42 +66,6 @@ function parseSummary(text) {
 
   // Detect meeting line: "09:15-09:45 Title (duration)"
   const meetingRegex = /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
-
-  // Convert various duration formats to hours (float)
-  function parseDuration(str) {
-    str = str.toLowerCase().trim();
-
-    // 1. Simple numbers with h
-    if (/^\d+(\.\d+)?h$/.test(str)) {
-      return parseFloat(str.replace("h", ""));
-    }
-
-    // 2. Hours + optional minutes
-    const hm = str.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min/);
-    if (hm) {
-      const hours = parseInt(hm[1], 10);
-      const mins = hm[2] ? parseInt(hm[2], 10) : 0;
-      return hours + mins / 60;
-    }
-
-    // 3. Hours only
-    const h = str.match(/(\d+)\s*hour[s]?/);
-    if (h) {
-      return parseInt(h[1], 10);
-    }
-
-    // 4. Minutes only
-    const m = str.match(/(\d+)\s*m(in(ute)?s?)?/);
-    if (m) {
-      return parseInt(m[1], 10) / 60;
-    }
-
-    // 5. Fallback: try to parse as number
-    const f = parseFloat(str);
-    if (!isNaN(f)) return f;
-
-    return 0; // default if unknown
-  }
 
   for (const line of lines) {
     if (dayRegex.test(line)) {
