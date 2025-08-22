@@ -1,13 +1,6 @@
-const test = require('node:test');
-const assert = require('node:assert');
-
-// Polyfill minimal localStorage before requiring app.js
-global.localStorage = {
-  getItem: () => null,
-  setItem: () => {}
-};
-
-const { parseSummary } = require('../app.js');
+import test from 'node:test';
+import assert from 'node:assert';
+import { parseSummary } from '../parser.js';
 
 const sampleDay = 'Mon';
 
