@@ -6,22 +6,21 @@ function handleParse() {
   parsedEvents = parseSummary(text);
   renderCategorization();
 }
-
 function parseSummary(text) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
   let idCounter = 1;
   let currentDay = null;
 
-  // Matches a day-only line like "Mon"
-  const dayRegex = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/;
+  // Detect day-only line like "Mon"
+  const dayRegex = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/i;
 
-  // Matches a meeting line like "09:15-09:45 Premium Standup (0.5h)"
-  const meetingRegex = /^(\d{2}:\d{2})-(\d{2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
+  // Detect meeting line: "09:15-09:45 Title (duration)"
+  const meetingRegex = /^(\d{1,2}:\d{2})-(\d{1,2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
 
   for (const line of lines) {
     if (dayRegex.test(line)) {
-      currentDay = line;
+      currentDay = line.slice(0,3); // Normalize to Mon/Tue/…
       continue;
     }
 
@@ -45,8 +44,33 @@ function parseSummary(text) {
       });
     }
   }
+
+  // Debug: if nothing parsed, log lines for inspection
+  if (events.length === 0) {
+    console.warn("No events parsed. Check input format:", lines);
+  }
+
   return events;
 }
+
+// More flexible duration parser
+function parseDuration(str) {
+  str = str.toLowerCase().trim();
+
+  if (str.endsWith("h")) return parseFloat(str);
+  if (str.includes("hour")) {
+    const hm = str.match(/(\\d+)\\s*hour[s]?\\s*(\\d+)?/);
+    if (hm) return parseInt(hm[1],10) + (hm[2]?parseInt(hm[2],10)/60:0);
+  }
+  if (str.includes("min")) {
+    const m = str.match(/(\\d+)/);
+    if (m) return parseInt(m[1],10)/60;
+  }
+  if (str.endsWith("m")) return parseInt(str,10)/60;
+  const f = parseFloat(str);
+  return isNaN(f) ? 0 : f;
+}
+
 
 
 // Convert various duration formats to hours (float)
