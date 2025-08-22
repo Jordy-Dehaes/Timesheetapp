@@ -11,28 +11,73 @@ function parseSummary(text) {
   const lines = text.split("\n").map(l => l.trim()).filter(l => l);
   const events = [];
   let idCounter = 1;
-  const regex = /^(\w{3})\s+(\d{2}:\d{2})-(\d{2}:\d{2})\s+(.+?)\s+\(([\d\.]+)h\)$/;
+
+  // Regex captures:
+  // Day (Mon), start, end, title, duration text
+  const regex = /^(\w{3})\s+(\d{2}:\d{2})-(\d{2}:\d{2})\s+(.+?)\s+\((.+)\)$/;
 
   for (const line of lines) {
     const match = line.match(regex);
     if (match) {
-      const [, day, start, end, title, duration] = match;
+      const [, day, start, end, title, durationRaw] = match;
       const date = dayToDate(day);
+
+      // Normalize duration
+      const duration = parseDuration(durationRaw);
+
       events.push({
         id: "evt-" + idCounter++,
         title: title.trim(),
         date,
         start,
         end,
-        duration: parseFloat(duration),
+        duration,
         category: findRule(title)?.category || "",
         project: findRule(title)?.project || "",
-        task: findRule(title)?.task || ""
+        task: findRule(title)?.task || "",
+        raw: line
       });
     }
   }
   return events;
 }
+
+// Convert various duration formats to hours (float)
+function parseDuration(str) {
+  str = str.toLowerCase().trim();
+
+  // 1. Simple numbers with h
+  if (/^\d+(\.\d+)?h$/.test(str)) {
+    return parseFloat(str.replace("h", ""));
+  }
+
+  // 2. Hours + optional minutes
+  const hm = str.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min/);
+  if (hm) {
+    const hours = parseInt(hm[1], 10);
+    const mins = hm[2] ? parseInt(hm[2], 10) : 0;
+    return hours + mins / 60;
+  }
+
+  // 3. Hours only
+  const h = str.match(/(\d+)\s*hour[s]?/);
+  if (h) {
+    return parseInt(h[1], 10);
+  }
+
+  // 4. Minutes only
+  const m = str.match(/(\d+)\s*m(in(ute)?s?)?/);
+  if (m) {
+    return parseInt(m[1], 10) / 60;
+  }
+
+  // 5. Fallback: try to parse as number
+  const f = parseFloat(str);
+  if (!isNaN(f)) return f;
+
+  return 0; // default if unknown
+}
+
 
 function dayToDate(dayAbbrev) {
   const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
